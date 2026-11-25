@@ -1,0 +1,259 @@
+/* Estilos de Resultados: Cinco Grandes Rasgos y Facetas BFI-2 */
+.results-header-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.results-header-section h2 {
+  font-size: 2rem;
+  color: var(--color-navy);
+  margin-bottom: 0.6rem;
+}
+
+.results-header-section p {
+  font-size: 1.05rem;
+  color: var(--color-slate-600);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Lista de Dominios */
+.domains-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.domain-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: transform 0.15s ease;
+}
+
+.domain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.domain-name {
+  font-size: 1.3rem;
+  color: var(--color-navy);
+}
+
+.domain-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.score-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-teal-dark);
+}
+
+.score-scale {
+  font-size: 0.88rem;
+  color: var(--color-slate-400);
+  font-weight: 500;
+}
+
+/* Gráfico visual continuo horizontal (1 a 5) */
+.score-visual-track {
+  margin-bottom: 1.25rem;
+}
+
+.score-track-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-slate-400);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.score-track-line {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-slate-200);
+  border-radius: 9999px;
+}
+
+.score-track-line.mini {
+  height: 4px;
+  margin: 0.5rem 0 0.75rem 0;
+}
+
+.score-track-dot {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-teal);
+  border: 3px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-track-line.mini .score-track-dot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-slate-700);
+}
+
+.domain-definition {
+  font-size: 0.95rem;
+  color: var(--color-slate-600);
+  line-height: 1.6;
+}
+
+/* Cuadro de nota pedagógica de interpretación */
+.results-note-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-left: 4px solid var(--color-slate-400);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.results-note-card p {
+  font-size: 0.88rem;
+  color: var(--color-slate-600);
+  line-height: 1.55;
+}
+
+.results-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* ======================================================== */
+/* ACORDEÓN DE FACETAS (Pantalla Rasgos Específicos)        */
+/* ======================================================== */
+.facets-accordion-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+.accordion-item {
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.accordion-header:hover {
+  background-color: var(--color-slate-50);
+}
+
+.accordion-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.accordion-domain-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.accordion-domain-score {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-teal-dark);
+  background-color: var(--color-teal-light);
+  border: 1px solid var(--color-teal-border);
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.accordion-arrow {
+  font-size: 0.8rem;
+  color: var(--color-slate-400);
+  transition: transform 0.2s ease;
+}
+
+.accordion-header.open .accordion-arrow {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  display: none;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--color-slate-100);
+}
+
+.accordion-content.open {
+  display: block;
+}
+
+.accordion-domain-def {
+  font-size: 0.92rem;
+  color: var(--color-slate-600);
+  margin: 1rem 0 1.25rem 0;
+  line-height: 1.55;
+}
+
+.facets-subgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.facet-card {
+  background-color: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+}
+
+.facet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.facet-name {
+  font-size: 0.95rem;
+  color: var(--color-navy);
+  font-weight: 700;
+}
+
+.facet-score {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-slate-800);
+}
+
+.facet-definition {
+  font-size: 0.82rem;
+  color: var(--color-slate-600);
+  line-height: 1.5;
+}

@@ -1,0 +1,262 @@
+/* Estilos del Cuestionario BFI-2 (Inspiración SeeMyPersonality) */
+#screen-questionnaire {
+  background-color: var(--color-bg-light);
+  min-height: 100vh;
+}
+
+/* Barra de recordatorio permanente en cabecera */
+.q-reminder-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-slate-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 0.65rem 1rem;
+}
+
+.q-reminder-inner {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-slate-600);
+  text-align: center;
+}
+
+.q-reminder-inner strong {
+  color: var(--color-slate-800);
+}
+
+/* Indicadores de progreso */
+.q-progress-section {
+  margin-bottom: 2rem;
+}
+
+.q-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--color-slate-600);
+  margin-bottom: 0.5rem;
+}
+
+.q-block-indicator {
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.q-progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-slate-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.q-progress-bar-fill {
+  height: 100%;
+  background-color: var(--color-teal);
+  transition: width 0.25s ease-out;
+  border-radius: 9999px;
+}
+
+/* Lista de afirmaciones */
+.q-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Tarjeta individual de pregunta */
+.question-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.question-card.card-error {
+  border-color: var(--color-error);
+  background-color: #fffafb;
+  box-shadow: 0 0 0 1px var(--color-error);
+}
+
+.question-number {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-slate-400);
+  margin-bottom: 0.5rem;
+}
+
+.question-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  line-height: 1.45;
+}
+
+/* Escala de respuesta con círculos horizontales */
+.scale-options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.scale-circle-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.scale-circle-btn:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* El círculo en sí */
+.circle-indicator {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--color-slate-300);
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.circle-indicator::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.18s ease;
+}
+
+.circle-label {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+  text-align: center;
+  line-height: 1.25;
+  font-weight: 500;
+  max-width: 90px;
+}
+
+/* Efectos hover */
+.scale-circle-btn:hover .circle-indicator {
+  border-color: var(--color-slate-400);
+  background-color: var(--color-slate-50);
+}
+
+/* Estilos de selección según valor (Inspiración SeeMyPersonality) */
+.scale-circle-btn.active.opt-val-1 .circle-indicator {
+  border-color: #e11d48;
+  background-color: #fff1f2;
+}
+.scale-circle-btn.active.opt-val-1 .circle-indicator::after {
+  background-color: #e11d48;
+}
+
+.scale-circle-btn.active.opt-val-2 .circle-indicator {
+  border-color: #f97316;
+  background-color: #fff7ed;
+}
+.scale-circle-btn.active.opt-val-2 .circle-indicator::after {
+  background-color: #f97316;
+}
+
+.scale-circle-btn.active.opt-val-3 .circle-indicator {
+  border-color: #64748b;
+  background-color: #f1f5f9;
+}
+.scale-circle-btn.active.opt-val-3 .circle-indicator::after {
+  background-color: #64748b;
+}
+
+.scale-circle-btn.active.opt-val-4 .circle-indicator {
+  border-color: #0d9488;
+  background-color: #f0fdfa;
+}
+.scale-circle-btn.active.opt-val-4 .circle-indicator::after {
+  background-color: #0d9488;
+}
+
+.scale-circle-btn.active.opt-val-5 .circle-indicator {
+  border-color: #6366f1;
+  background-color: #eef2ff;
+}
+.scale-circle-btn.active.opt-val-5 .circle-indicator::after {
+  background-color: #6366f1;
+}
+
+.scale-circle-btn.active .circle-label {
+  color: var(--color-slate-900);
+  font-weight: 700;
+}
+
+/* Navegación del cuestionario */
+.q-navigation-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.q-block-error-banner {
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error);
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+/* Adaptación móvil para la escala */
+@media (max-width: 600px) {
+  .question-text {
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+  }
+  .circle-indicator {
+    width: 38px;
+    height: 38px;
+  }
+  .circle-indicator::after {
+    width: 14px;
+    height: 14px;
+  }
+  .circle-label {
+    font-size: 0.68rem;
+    max-width: 65px;
+  }
+}

@@ -1,0 +1,228 @@
+/* Estilos para las Actividades Escritas y Botón Generar PDF */
+.activities-section {
+  border-top: 2px solid var(--color-slate-200);
+  padding-top: 3rem;
+  margin-top: 2rem;
+}
+
+.activities-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.activities-header h2 {
+  font-size: 1.85rem;
+  color: var(--color-navy);
+  margin-bottom: 0.5rem;
+}
+
+.activities-header p {
+  font-size: 1rem;
+  color: var(--color-slate-600);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.activity-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.activity-number-tag {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-teal-dark);
+  background-color: var(--color-teal-light);
+  border: 1px solid var(--color-teal-border);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.activity-title {
+  font-size: 1.25rem;
+  color: var(--color-navy);
+  margin-bottom: 0.75rem;
+}
+
+.activity-prompt {
+  font-size: 1rem;
+  color: var(--color-slate-700);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Tabla de ámbitos profesionales en Actividad 3 */
+.ambits-table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0 2rem 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-slate-200);
+}
+
+.ambits-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.ambits-table th {
+  background-color: var(--color-slate-100);
+  color: var(--color-slate-800);
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-slate-200);
+}
+
+.ambits-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-slate-200);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.ambits-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ambit-name {
+  color: var(--color-navy);
+  width: 32%;
+}
+
+.ambit-desc {
+  color: var(--color-slate-600);
+}
+
+/* Campos de formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-slate-800);
+}
+
+.form-select, .form-textarea, .form-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--color-slate-800);
+  background-color: #ffffff;
+  border: 1px solid var(--color-slate-300);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.form-select:focus, .form-textarea:focus, .form-input:focus {
+  border-color: var(--color-teal);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.55;
+}
+
+/* Errores de validación */
+.form-select.input-error, .form-textarea.input-error, .form-input.input-error {
+  border-color: var(--color-error);
+  background-color: #fffafb;
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.15);
+}
+
+.field-error-msg {
+  color: var(--color-error);
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.field-error-msg::before {
+  content: "⚠️";
+  font-size: 0.85rem;
+}
+
+/* Área de acción final */
+.final-action-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3.5rem;
+  text-align: center;
+}
+
+.btn-generate-pdf {
+  width: 100%;
+  max-width: 440px;
+  font-size: 1.15rem;
+  padding: 1.15rem 2rem;
+  background-color: var(--color-navy);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+  transition: all 0.2s ease;
+}
+
+.btn-generate-pdf:hover {
+  background-color: var(--color-navy-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2);
+}
+
+.btn-generate-pdf:active {
+  transform: translateY(1px);
+}
+
+.pdf-btn-icon {
+  margin-right: 0.5rem;
+}
+
+.classroom-hint {
+  font-size: 0.88rem;
+  color: var(--color-slate-500);
+}
+
+.pdf-status-msg {
+  max-width: 440px;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.pdf-status-msg.success {
+  background-color: var(--color-success-bg);
+  border: 1px solid #a7f3d0;
+  color: var(--color-success);
+}
+
+.pdf-status-msg.error {
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error);
+}

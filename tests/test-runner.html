@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFI-2 — Suite de Pruebas en Navegador</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <script src="../lib/jspdf.umd.min.js"></script>
+  <script src="../lib/pdf-fonts.js"></script>
+  <style>
+    body { padding: 2rem 1rem; max-width: 800px; margin: 0 auto; background-color: #f8fafc; }
+    .test-suite-header { margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; }
+    .test-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+    .test-card.passed { border-left: 5px solid #059669; }
+    .test-card.failed { border-left: 5px solid #e11d48; }
+    .badge-pass { background: #ecfdf5; color: #059669; font-weight: bold; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+    .badge-fail { background: #fff1f2; color: #e11d48; font-weight: bold; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.85rem; }
+    .test-summary { font-size: 1.1rem; font-weight: bold; padding: 1rem; border-radius: 8px; margin-top: 1.5rem; }
+    .test-summary.all-ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+  </style>
+</head>
+<body>
+
+  <div class="test-suite-header">
+    <h1>BFI-2: Suite de Pruebas de Calidad</h1>
+    <p>Verificación psicométrica, ítems del BFI-2, validación pedagógica y generación del PDF de 2 páginas.</p>
+  </div>
+
+  <div id="test-results-container"></div>
+  <div id="test-summary-container"></div>
+
+  <script type="module">
+    import { BFI2_ITEMS } from '../js/data/items.js';
+    import { DOMAINS, FACETS } from '../js/data/definitions.js';
+    import { calculateBFI2Scores } from '../js/scoring.js';
+    import { countWords, validateActivities, validateStudentInfo } from '../js/validation.js';
+    import { generateBFI2Pdf } from '../js/pdf-generator.js';
+
+    const resultsContainer = document.getElementById('test-results-container');
+    const summaryContainer = document.getElementById('test-summary-container');
+    let totalTests = 0;
+    let passedTests = 0;
+
+    function assert(desc, condition) {
+      totalTests++;
+      const card = document.createElement('div');
+      card.className = 'test-card ' + (condition ? 'passed' : 'failed');
+      card.innerHTML = `
+        <span class="test-desc">${desc}</span>
+        <span class="${condition ? 'badge-pass' : 'badge-fail'}">${condition ? 'PASÓ' : 'FALLÓ'}</span>
+      `;
+      resultsContainer.appendChild(card);
+      if (condition) passedTests++;
+    }
+
+    try {
+      // 1. Ítems
+      assert('Existen exactamente 60 afirmaciones en el BFI-2', BFI2_ITEMS.length === 60);
+      assert('30 ítems directos y 30 ítems inversos equilibrados', BFI2_ITEMS.filter(it => it.reverse).length === 30);
+      assert('Cada ítem tiene id consecutivo de 1 a 60', BFI2_ITEMS.every((it, idx) => it.id === idx + 1));
+      assert('Cada ítem conserva su formulación original y adaptada', BFI2_ITEMS.every(it => it.original && it.text));
+
+      // 2. Faceta de Responsabilidad
+      assert('La tercera faceta de Responsabilidad se denomina didácticamente "Cumplimiento de compromisos"', FACETS.cumplimiento_compromisos.name === 'Cumplimiento de compromisos');
+
+      // 3. Psicométrica - Respuestas Neutras (todas 3)
+      const ans3 = {};
+      for (let i = 1; i <= 60; i++) ans3[i] = 3;
+      const res3 = calculateBFI2Scores(ans3);
+      assert('Caso neutro (todas 3): Extraversión da 3.00', res3.domains.extraversion.scoreFormatted === '3.00');
+      assert('Caso neutro (todas 3): Cordialidad da 3.00', res3.domains.agreeableness.scoreFormatted === '3.00');
+      assert('Caso neutro (todas 3): Responsabilidad da 3.00', res3.domains.conscientiousness.scoreFormatted === '3.00');
+      assert('Caso neutro (todas 3): Emocionalidad negativa da 3.00', res3.domains.negative_emotionality.scoreFormatted === '3.00');
+      assert('Caso neutro (todas 3): Apertura de mente da 3.00', res3.domains.open_mindedness.scoreFormatted === '3.00');
+
+      // 4. Psicométrica - Caso Máximo (directos=5, inversos=1)
+      const ansMax = {};
+      BFI2_ITEMS.forEach(it => { ansMax[it.id] = it.reverse ? 1 : 5; });
+      const resMax = calculateBFI2Scores(ansMax);
+      assert('Caso máximo teórico: todos los dominios dan 5.00', Object.values(resMax.domains).every(d => d.scoreFormatted === '5.00'));
+      assert('Caso máximo teórico: todas las 15 facetas dan 5.00', Object.values(resMax.facets).every(f => f.scoreFormatted === '5.00'));
+
+      // 5. Psicométrica - Caso Mínimo (directos=1, inversos=5)
+      const ansMin = {};
+      BFI2_ITEMS.forEach(it => { ansMin[it.id] = it.reverse ? 5 : 1; });
+      const resMin = calculateBFI2Scores(ansMin);
+      assert('Caso mínimo teórico: todos los dominios dan 1.00', Object.values(resMin.domains).every(d => d.scoreFormatted === '1.00'));
+      assert('Caso mínimo teórico: todas las 15 facetas dan 1.00', Object.values(resMin.facets).every(f => f.scoreFormatted === '1.00'));
+
+      // 6. Validación de palabras
+      assert('Conteo de palabras: ignora signos sueltos y espacios', countWords('  hola  ...  mundo  ---  ') === 2);
+      assert('Regla de 10 palabras rechaza 9 palabras', countWords('Uno dos tres cuatro cinco seis siete ocho nueve') < 10);
+      assert('Regla de 10 palabras acepta 10 palabras', countWords('Uno dos tres cuatro cinco seis siete ocho nueve diez') === 10);
+
+      // 7. Validación de formulario y selectores
+      const invalidActs = {
+        q1Text: 'Muy corto',
+        q2Domain: '',
+        q2Text: 'Corto',
+        q3Ambit: '',
+        q3Question: '',
+        q3Traits: 'Corto'
+      };
+      const valInvalid = validateActivities(invalidActs);
+      assert('Validación de actividades detecta los 6 campos no conformes', Object.keys(valInvalid.errors).length === 6);
+
+      const validActs = {
+        q1Text: 'Esta es una respuesta detallada con más de diez palabras completas para la actividad uno.',
+        q2Domain: 'extraversion',
+        q2Text: 'Esta es una respuesta argumentada con más de diez palabras sobre las facetas de extraversión.',
+        q3Ambit: 'trabajo',
+        q3Question: '¿Cómo influye la asertividad en el liderazgo de equipos?',
+        q3Traits: 'Mediríamos asertividad y responsabilidad para estudiar el desempeño profesional y la colaboración en el trabajo.'
+      };
+      const valValid = validateActivities(validActs);
+      assert('Validación aprueba actividades correctamente desarrolladas', valValid.isValid === true);
+
+      // 8. Generación de PDF de exactamente 2 páginas
+      const testDoc = generateBFI2Pdf({
+        student: { firstName: 'Lucía', lastName: 'García Pérez' },
+        scores: res3,
+        activities: validActs
+      });
+      assert('El generador de PDF produce estrictamente 2 páginas A4', testDoc.getNumberOfPages() === 2);
+
+      summaryContainer.className = 'test-summary all-ok';
+      summaryContainer.innerHTML = `✔ ${passedTests} de ${totalTests} pruebas pasadas con éxito.`;
+    } catch (e) {
+      console.error(e);
+      summaryContainer.className = 'test-summary';
+      summaryContainer.innerHTML = `❌ Error en ejecución de pruebas: ${e.message}`;
+    }
+  </script>
+</body>
+</html>

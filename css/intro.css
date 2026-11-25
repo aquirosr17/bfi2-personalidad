@@ -1,0 +1,171 @@
+/* Pantalla inicial BFI-2 (Fondo azul marino oscuro) */
+#screen-intro {
+  background-color: var(--color-bg-dark);
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#screen-intro .container {
+  max-width: 680px;
+  padding: 3rem 1.5rem;
+}
+
+.intro-badge-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.intro-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.intro-title {
+  font-size: 2.25rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.intro-subtitle {
+  font-size: 1.15rem;
+  color: var(--color-teal-border);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.intro-description {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+/* Tarjeta de identificación del alumno */
+.intro-student-card {
+  background-color: var(--color-card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.intro-student-card h3 {
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.student-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 580px) {
+  .student-inputs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input-field-group label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.input-field-group input {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input-field-group input:focus {
+  border-color: var(--color-teal);
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+.intro-instructions-box {
+  background-color: rgba(13, 148, 136, 0.1);
+  border-left: 3px solid var(--color-teal);
+  padding: 1.25rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 2rem;
+}
+
+.intro-instructions-box p {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: 0.5rem;
+}
+
+.intro-instructions-box p:last-child {
+  margin-bottom: 0;
+}
+
+.intro-instructions-box .emphasis {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.intro-action-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-start-large {
+  width: 100%;
+  max-width: 360px;
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  letter-spacing: 0.02em;
+}
+
+.intro-error-msg {
+  color: #fb7185;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.intro-footer-notes {
+  margin-top: 2.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.intro-footer-notes a {
+  color: #94a3b8;
+  text-decoration: underline;
+}

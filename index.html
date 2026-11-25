@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Cómo es tu personalidad? — Cuestionario BFI-2 (Bachillerato)</title>
+  <meta name="description" content="Aplicación web didáctica para realizar el cuestionario de personalidad Big Five Inventory-2 (BFI-2) adaptado para 1.º de Bachillerato.">
+  
+  <!-- Estilos modulares -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/questionnaire.css">
+  <link rel="stylesheet" href="css/results.css">
+  <link rel="stylesheet" href="css/activities.css">
+
+  <!-- Dependencias locales para generación de PDF (Sin conexiones externas en runtime) -->
+  <script src="lib/jspdf.umd.min.js"></script>
+  <script src="lib/pdf-fonts.js"></script>
+</head>
+<body>
+
+  <!-- Barra superior con opción de reinicio -->
+  <header class="app-topbar">
+    <button type="button" id="btn-restart-global" class="btn-link" title="Borrar respuestas y reiniciar">Reiniciar cuestionario</button>
+  </header>
+
+  <main id="app-root">
+
+    <!-- ======================================================== -->
+    <!-- ETAPA 1: PANTALLA INICIAL (Tema azul marino oscuro)      -->
+    <!-- ======================================================== -->
+    <section id="screen-intro">
+      <div class="container">
+        
+        <div class="intro-badge-row">
+          <span class="intro-badge">60 afirmaciones</span>
+          <span class="intro-badge">5-10 minutos aprox.</span>
+          <span class="intro-badge">Resultados al finalizar</span>
+        </div>
+
+        <h1 class="intro-title">¿Cómo es tu personalidad?</h1>
+        <h2 class="intro-subtitle">Cuestionario de personalidad BFI-2</h2>
+
+        <p class="intro-description">
+          El BFI-2 es un cuestionario psicológico que permite medir cinco grandes rasgos de personalidad y otros quince más específicos.
+          Responderás a 60 afirmaciones sobre cómo sueles ser. Al terminar, podrás explorar tus resultados y descubrir qué significa cada puntuación.
+        </p>
+
+        <!-- Identificación del alumno (Obligatoria) -->
+        <div class="intro-student-card">
+          <h3>Identificación del estudiante</h3>
+          <div class="student-inputs-grid">
+            <div class="input-field-group">
+              <label for="student-first-name">Nombre *</label>
+              <input type="text" id="student-first-name" placeholder="Ej. Lucía" autocomplete="given-name" required>
+            </div>
+            <div class="input-field-group">
+              <label for="student-last-name">Apellidos *</label>
+              <input type="text" id="student-last-name" placeholder="Ej. García Fernández" autocomplete="family-name" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instrucciones pedagógicas -->
+        <div class="intro-instructions-box">
+          <p class="emphasis">«Contesta pensando en cómo eres habitualmente, no solo en cómo te encuentras hoy ni en cómo te gustaría ser».</p>
+          <p>«No hay respuestas correctas o incorrectas. Responde con sinceridad».</p>
+          <p>Los resultados son personales y podrás descargarlos en un documento PDF de dos páginas para realizar la actividad de clase.</p>
+        </div>
+
+        <!-- Botón de inicio -->
+        <div class="intro-action-area">
+          <button type="button" id="btn-start-questionnaire" class="btn-primary btn-start-large">
+            EMPEZAR CUESTIONARIO
+          </button>
+          <p id="intro-error-msg" class="intro-error-msg hidden"></p>
+        </div>
+
+        <!-- Referencias oficiales y privacidad -->
+        <footer class="intro-footer-notes">
+          <p>
+            Instrumento: <strong>Big Five Inventory-2 (BFI-2)</strong>, Christopher J. Soto y Oliver P. John (2017).<br>
+            Adaptación española: David Gallardo-Pujol, Luís Oceja, Anna Cortijos-Bernabeu y Victor Rouco.<br>
+            <a href="https://www.colby.edu/wp-content/uploads/2022/07/bfi2-form-spanish.pdf" target="_blank" rel="noopener noreferrer">Consultar cuestionario original español</a>.<br>
+            <em>Esta web utiliza una adaptación didáctica de presentación en primera persona para Bachillerato. No se recopilan ni envían datos personales a ningún servidor.</em>
+          </p>
+        </footer>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- ETAPA 2: CUESTIONARIO (10 bloques de 6 preguntas)        -->
+    <!-- ======================================================== -->
+    <section id="screen-questionnaire" class="hidden">
+      
+      <!-- Recordatorio permanente visible en la cabecera -->
+      <div class="q-reminder-banner">
+        <div class="q-reminder-inner">
+          <span>💡</span>
+          <span><strong>Recordatorio:</strong> Contesta pensando en cómo eres habitualmente, no solo en cómo te encuentras hoy ni en cómo te gustaría ser.</span>
+        </div>
+      </div>
+
+      <div class="container">
+        
+        <!-- Indicador de progreso -->
+        <div class="q-progress-section">
+          <div class="q-progress-labels">
+            <span id="q-block-indicator" class="q-block-indicator">Bloque 1 de 10</span>
+            <span id="q-total-indicator">0 de 60 afirmaciones respondidas</span>
+          </div>
+          <div class="q-progress-bar-track">
+            <div id="q-progress-bar" class="q-progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Contenedor dinámico de las 6 afirmaciones del bloque -->
+        <div id="q-items-container" class="q-items-container"></div>
+
+        <!-- Aviso si quedan preguntas sin responder -->
+        <div id="q-block-error" class="q-block-error-banner hidden"></div>
+
+        <!-- Controles de navegación de bloques -->
+        <div class="q-navigation-bar">
+          <button type="button" id="btn-prev-block" class="btn-secondary">
+            ← Bloque anterior
+          </button>
+          <button type="button" id="btn-next-block" class="btn-primary">
+            Siguiente bloque →
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- ETAPA 3: TUS CINCO GRANDES RASGOS                        -->
+    <!-- ======================================================== -->
+    <section id="screen-domains" class="hidden">
+      <div class="container">
+        
+        <header class="results-header-section">
+          <h2>Tus cinco grandes rasgos</h2>
+          <p>
+            Estas puntuaciones resumen tus respuestas al cuestionario. Cada rasgo representa una tendencia de personalidad, no una categoría en la que quedas clasificado.
+          </p>
+        </header>
+
+        <!-- Lista de los 5 dominios con gráficos y definiciones -->
+        <div id="domains-list-container" class="domains-list"></div>
+
+        <!-- Nota pedagógica de interpretación -->
+        <div class="results-note-card">
+          <p>
+            <strong>Nota de interpretación:</strong> Las puntuaciones son medias de respuestas entre 1 y 5. No indican percentiles ni permiten saber automáticamente qué porcentaje de personas tiene una puntuación superior o inferior a la tuya.
+          </p>
+        </div>
+
+        <!-- Botón para avanzar a facetas y actividades -->
+        <div class="results-actions">
+          <button type="button" id="btn-go-to-facets" class="btn-primary" style="font-size: 1.05rem; padding: 0.95rem 2rem;">
+            VER MIS RASGOS ESPECÍFICOS →
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- ETAPA 4: RASGOS ESPECÍFICOS Y ACTIVIDADES (En una pantalla)-->
+    <!-- ======================================================== -->
+    <section id="screen-facets-activities" class="hidden">
+      <div class="container">
+
+        <!-- 8.1. Tus rasgos específicos (Desplegables) -->
+        <div class="facets-section">
+          <header class="results-header-section">
+            <h2>Tus rasgos específicos</h2>
+            <p>Cada gran rasgo se compone de tres facetas más específicas. Selecciona uno para descubrirlas.</p>
+          </header>
+
+          <!-- Acordeón interactivo con los 5 dominios y sus 15 facetas -->
+          <div id="facets-accordion-container" class="facets-accordion-container"></div>
+        </div>
+
+        <!-- 9. Interpreta los resultados (Tres actividades) -->
+        <div class="activities-section">
+          <header class="activities-header">
+            <h2>Interpreta los resultados</h2>
+            <p>
+              Esta actividad escrita servirá para reflexionar sobre lo aprendido y relacionar la teoría psicológica de los rasgos con conductas concretas.
+            </p>
+          </header>
+
+          <!-- Actividad 1 -->
+          <article class="activity-card" id="card-act-1">
+            <span class="activity-number-tag">Actividad 1</span>
+            <h3 class="activity-title">Rasgo específico y conducta habitual</h3>
+            <p class="activity-prompt">
+              «Escoge uno de tus rasgos específicos y piensa en algún comportamiento habitual tuyo que pueda estar relacionado con él. Describe ese comportamiento y explica qué relación encuentras entre tu puntuación y tu manera de actuar».
+            </p>
+            <div class="form-group">
+              <label for="act-q1-text">Tu respuesta:</label>
+              <textarea id="act-q1-text" class="form-textarea" rows="4" maxlength="950" placeholder="Redacta aquí tu reflexión explicando el rasgo y tu comportamiento habitual..."></textarea>
+            </div>
+          </article>
+
+          <!-- Actividad 2 -->
+          <article class="activity-card" id="card-act-2">
+            <span class="activity-number-tag">Actividad 2</span>
+            <h3 class="activity-title">Valor de las 15 facetas frente a los 5 grandes rasgos</h3>
+            <p class="activity-prompt">
+              «El BFI-2 podría limitarse a mostrar los resultados de los cinco grandes rasgos. Sin embargo, también ofrece las puntuaciones de quince rasgos específicos.<br>
+              ¿Qué información importante sobre la personalidad de alguien perderíamos si solo conociéramos sus cinco puntuaciones generales? Utiliza uno de los grandes rasgos y sus tres rasgos específicos para explicar tu respuesta».
+            </p>
+            
+            <div class="form-group">
+              <label for="act-q2-domain">Gran rasgo elegido: *</label>
+              <select id="act-q2-domain" class="form-select">
+                <option value="">Escoge un gran rasgo</option>
+                <option value="extraversion">Extraversión</option>
+                <option value="agreeableness">Cordialidad</option>
+                <option value="conscientiousness">Responsabilidad</option>
+                <option value="negative_emotionality">Emocionalidad negativa</option>
+                <option value="open_mindedness">Apertura de mente</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="act-q2-text">Desarrolla tu respuesta: *</label>
+              <textarea id="act-q2-text" class="form-textarea" rows="5" maxlength="1150" placeholder="Explica qué matices o información perderíamos analizando las facetas de ese gran rasgo..."></textarea>
+            </div>
+          </article>
+
+          <!-- Actividad 3 -->
+          <article class="activity-card" id="card-act-3">
+            <span class="activity-number-tag">Actividad 3</span>
+            <h3 class="activity-title">¿Para qué se utilizan los tests de personalidad?</h3>
+            <p class="activity-prompt">
+              «Has utilizado el test de personalidad BFI-2 para conocer mejor tu personalidad, pero los psicólogos también utilizan cuestionarios de personalidad».
+            </p>
+
+            <!-- Tabla de ámbitos profesionales -->
+            <div id="ambits-table-container" class="ambits-table-container"></div>
+
+            <p class="activity-prompt" style="margin-top: 1.5rem;">
+              «Escoge uno de los ámbitos anteriores y realiza una pregunta que podríamos intentar responder estudiando la personalidad de las personas.<br>
+              ¿Qué rasgos concretos te interesaría medir y para qué serviría conocerlos?».
+            </p>
+
+            <div class="form-group">
+              <label for="act-q3-ambit">Ámbito elegido: *</label>
+              <select id="act-q3-ambit" class="form-select">
+                <option value="">Escoge un ámbito</option>
+                <option value="investigacion">Investigación psicológica</option>
+                <option value="trabajo">Psicología del trabajo</option>
+                <option value="evaluacion">Evaluación psicológica</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="act-q3-question">¿Qué pregunta intentarías responder estudiando la personalidad? *</label>
+              <input type="text" id="act-q3-question" class="form-input" maxlength="350" placeholder="Formula aquí tu pregunta de investigación...">
+            </div>
+
+            <div class="form-group">
+              <label for="act-q3-traits">¿Qué rasgos concretos te interesaría medir y para qué serviría conocerlos? *</label>
+              <textarea id="act-q3-traits" class="form-textarea" rows="4" maxlength="950" placeholder="Indica los rasgos o facetas de interés y su utilidad práctica..."></textarea>
+            </div>
+          </article>
+
+          <!-- Botón grande GENERAR PDF -->
+          <div class="final-action-area">
+            <button type="button" id="btn-generate-pdf" class="btn-primary btn-generate-pdf">
+              <svg class="pdf-btn-icon" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              GENERAR PDF
+            </button>
+            <p class="classroom-hint">Descarga tus resultados y respuestas para entregarlos en Classroom.</p>
+            <div id="pdf-status-msg" class="pdf-status-msg hidden"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script principal modular de la aplicación -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
