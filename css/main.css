@@ -142,5 +142,13 @@ h1, h2, h3, h4 {
 
 .screen-intro-active .app-topbar {
   background-color: var(--color-bg-dark);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen-intro-active .app-topbar .btn-link {
+  color: #64748b;
+}
+
+.screen-intro-active .app-topbar .btn-link:hover {
+  color: #94a3b8;
 }

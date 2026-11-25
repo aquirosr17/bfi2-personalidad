@@ -7,7 +7,7 @@
 export function countWords(text) {
   if (!text || typeof text !== 'string') return 0;
   // Divide por espacios y filtra tokens que contengan al menos una letra o número
-  const tokens = text.trim().split(/\\s+/);
+  const tokens = text.trim().split(/\s+/);
   const validTokens = tokens.filter(t => /[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ]/.test(t));
   return validTokens.length;
 }

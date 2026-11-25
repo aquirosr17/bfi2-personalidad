@@ -29,8 +29,41 @@ export class BFI2App {
 
     this.initElements();
     this.loadPersistedState();
+    this.checkUrlDemoParams();
     this.attachEventListeners();
     this.render();
+  }
+
+  checkUrlDemoParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const demo = urlParams.get('demo');
+    if (demo === 'questionnaire') {
+      this.state.student = { firstName: 'Lucía', lastName: 'García Pérez' };
+      this.state.currentStep = 'questionnaire';
+      this.state.currentBlock = 0;
+      this.state.answers = { 1: 4, 2: 5, 3: 2 };
+    } else if (demo === 'domains' || demo === 'facets') {
+      this.state.student = { firstName: 'Lucía', lastName: 'García Pérez' };
+      this.state.currentStep = demo === 'domains' ? 'domains' : 'facets_activities';
+      this.state.currentBlock = 9;
+      for (let i = 1; i <= 60; i++) {
+        this.state.answers[i] = ((i * 7) % 5) + 1;
+      }
+      this.state.activities = {
+        q1Text: 'Suelo organizar con antelación las semanas de exámenes anotando cada tema en una libreta para no olvidar nada, lo cual refleja mi alta puntuación en orden y planificación.',
+        q2Domain: 'extraversion',
+        q2Text: 'Si solo conociéramos que alguien tiene una Extraversión media de 3.5, no sabríamos si es una persona muy sociable pero poco asertiva que prefiere escuchar, o alguien con gran iniciativa y dotes de liderazgo que necesita poco contacto social.',
+        q3Ambit: 'trabajo',
+        q3Question: '¿De qué forma predice la faceta de cumplimiento de compromisos el éxito laboral y la reducción del absentismo en puestos técnicos?',
+        q3Traits: 'Mediría especialmente la faceta de cumplimiento de compromisos y la productividad para predecir la fiabilidad en entregas complejas.'
+      };
+      if (this.el.q1Text) this.el.q1Text.value = this.state.activities.q1Text;
+      if (this.el.q2Domain) this.el.q2Domain.value = this.state.activities.q2Domain;
+      if (this.el.q2Text) this.el.q2Text.value = this.state.activities.q2Text;
+      if (this.el.q3Ambit) this.el.q3Ambit.value = this.state.activities.q3Ambit;
+      if (this.el.q3Question) this.el.q3Question.value = this.state.activities.q3Question;
+      if (this.el.q3Traits) this.el.q3Traits.value = this.state.activities.q3Traits;
+    }
   }
 
   initElements() {
@@ -227,6 +260,8 @@ export class BFI2App {
       { id: 'domains', el: this.el.screenDomains },
       { id: 'facets_activities', el: this.el.screenFacetsActivities }
     ];
+
+    document.body.classList.toggle('screen-intro-active', this.state.currentStep === 'intro');
 
     screens.forEach(s => {
       if (s.id === this.state.currentStep) {

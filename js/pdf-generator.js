@@ -9,14 +9,14 @@ export function sanitizeFileName(lastName, firstName) {
   const normalize = (str) =>
     (str || '')
       .normalize('NFD')
-      .replace(/[\\u0300-\\u036f]/g, '')
+      .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-zA-Z0-9]/g, '_')
       .replace(/_+/g, '_')
       .replace(/^_|_$/g, '');
 
   const normLast = normalize(lastName) || 'Apellidos';
   const normFirst = normalize(firstName) || 'Nombre';
-  return BFI2__.pdf;
+  return 'BFI2_' + normLast + '_' + normFirst + '.pdf';
 }
 
 /**
@@ -59,7 +59,7 @@ function drawScoreBar(doc, x, y, width, score, dotColor = [15, 23, 42]) {
 
   // Punto indicador
   const dotX = x + ((clamped - 1) / 4) * width;
-  doc.setFillColor(...dotColor);
+  doc.setFillColor(dotColor[0], dotColor[1], dotColor[2]);
   doc.circle(dotX, y, 1.6, 'F');
 }
 
@@ -97,7 +97,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
   doc.text('INFORME PSICOLÓGICO DE PERSONALIDAD • BFI-2', marginX, 13);
-  doc.text(Fecha: , pageWidth - marginX, 13, { align: 'right' });
+  doc.text('Fecha: ' + todayStr, pageWidth - marginX, 13, { align: 'right' });
 
   doc.setFont(fontBold, 'bold');
   doc.setFontSize(16);
@@ -107,7 +107,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   doc.setFont(fontBold, 'bold');
   doc.setFontSize(10.5);
   doc.setTextColor(30, 41, 59);
-  doc.text(Alumno/a:  , marginX, 27);
+  doc.text('Alumno/a: ' + student.firstName + ' ' + student.lastName, marginX, 27);
 
   doc.setFont(fontRegular, 'normal');
   doc.setFontSize(7.5);
@@ -123,7 +123,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   doc.setFont(fontBold, 'bold');
   doc.setFontSize(10);
   doc.setTextColor(15, 23, 42);
-  doc.text('CINCO GRANDES RASGOS (Puntuaciones generales de 1 a 5)', marginX, 42);
+  doc.text('CINCO GRANDES RASGOS', marginX, 42);
 
   // Cabecera de la escala para los dominios
   doc.setFont(fontRegular, 'normal');
@@ -147,7 +147,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
     doc.setFont(fontBold, 'bold');
     doc.setFontSize(9.5);
     doc.setTextColor(30, 41, 59);
-    doc.text(${dom.scoreFormatted}, marginX + 62, curY + 1, { align: 'right' });
+    doc.text(dom.scoreFormatted, marginX + 62, curY + 1, { align: 'right' });
 
     drawScoreBar(doc, domScaleX, curY, domScaleWidth, dom.score, [14, 116, 144]); // teal-700
     curY += 8.5;
@@ -192,7 +192,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
       doc.setFont(fontBold, 'bold');
       doc.setFontSize(8);
       doc.setTextColor(15, 23, 42);
-      doc.text(${facet.scoreFormatted}, col1X + 46, col1Y, { align: 'right' });
+      doc.text(facet.scoreFormatted, col1X + 46, col1Y, { align: 'right' });
 
       drawScoreBar(doc, col1X + 50, col1Y - 1, 36, facet.score, [71, 85, 105]);
       col1Y += 5.5;
@@ -220,7 +220,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
       doc.setFont(fontBold, 'bold');
       doc.setFontSize(8);
       doc.setTextColor(15, 23, 42);
-      doc.text(${facet.scoreFormatted}, col2X + 46, col2Y, { align: 'right' });
+      doc.text(facet.scoreFormatted, col2X + 46, col2Y, { align: 'right' });
 
       drawScoreBar(doc, col2X + 50, col2Y - 1, 36, facet.score, [71, 85, 105]);
       col2Y += 5.5;
@@ -270,7 +270,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
   doc.text('INFORME DE PERSONALIDAD • BFI-2', marginX, 13);
-  doc.text(Alumno/a:  , pageWidth - marginX, 13, { align: 'right' });
+  doc.text('Alumno/a: ' + student.firstName + ' ' + student.lastName, pageWidth - marginX, 13, { align: 'right' });
 
   doc.setFont(fontBold, 'bold');
   doc.setFontSize(15);
@@ -336,7 +336,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   doc.setFont(fontBold, 'bold');
   doc.setFontSize(8);
   doc.setTextColor(30, 41, 59);
-  doc.text(Gran rasgo seleccionado: , marginX, p2Y);
+  doc.text('Gran rasgo seleccionado: ', marginX, p2Y);
   doc.setFont(fontBold, 'bold');
   doc.setTextColor(14, 116, 144);
   doc.text(q2DomName, marginX + doc.getTextWidth('Gran rasgo seleccionado: '), p2Y);
@@ -438,7 +438,7 @@ export function generateBFI2Pdf({ student, scores, activities }) {
   // Garantizar exactamente 2 páginas
   const pageCount = doc.getNumberOfPages();
   if (pageCount > 2) {
-    console.warn(El documento generó  páginas, eliminando páginas excedentes.);
+    console.warn('El documento generó ' + pageCount + ' páginas, eliminando páginas excedentes.');
     while (doc.getNumberOfPages() > 2) {
       doc.deletePage(doc.getNumberOfPages());
     }

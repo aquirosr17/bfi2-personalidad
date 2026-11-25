@@ -13,7 +13,7 @@ export function calculateBFI2Scores(rawAnswers) {
   for (const item of BFI2_ITEMS) {
     const rawVal = Number(rawAnswers[item.id]);
     if (!rawVal || rawVal < 1 || rawVal > 5) {
-      throw new Error(Respuesta inválida o faltante para el ítem : );
+      throw new Error('Respuesta inválida o faltante para el ítem ' + item.id + ': ' + rawVal);
     }
     const finalScore = item.reverse ? (6 - rawVal) : rawVal;
     scoredItems[item.id] = {
@@ -29,7 +29,7 @@ export function calculateBFI2Scores(rawAnswers) {
     const facetDef = FACETS[facetKey];
     const facetItems = BFI2_ITEMS.filter(it => it.facet === facetKey);
     if (facetItems.length !== 4) {
-      throw new Error(La faceta  debe tener exactamente 4 ítems, encontrados );
+      throw new Error('La faceta ' + facetKey + ' debe tener exactamente 4 ítems, encontrados ' + facetItems.length);
     }
     const sum = facetItems.reduce((acc, it) => acc + scoredItems[it.id].finalScore, 0);
     const mean = sum / 4.0;
@@ -50,7 +50,7 @@ export function calculateBFI2Scores(rawAnswers) {
     const domainDef = DOMAINS[domainKey];
     const domainItems = BFI2_ITEMS.filter(it => it.domain === domainKey);
     if (domainItems.length !== 12) {
-      throw new Error(El dominio  debe tener exactamente 12 ítems, encontrados );
+      throw new Error('El dominio ' + domainKey + ' debe tener exactamente 12 ítems, encontrados ' + domainItems.length);
     }
     const sum = domainItems.reduce((acc, it) => acc + scoredItems[it.id].finalScore, 0);
     const mean = sum / 12.0;
